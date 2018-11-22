@@ -179,6 +179,7 @@ export default class Server extends EventEmitter
             {
                 // this.registeredEvents[name]
                 this.removeListener(name, this.registeredEvents[name], this)
+                delete this.registeredEvents[name]
                 delete namespace.events[name]
             }
         }

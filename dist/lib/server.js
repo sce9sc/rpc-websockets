@@ -313,6 +313,7 @@ var Server = function (_EventEmitter) {
                 if (namespace.events[name] !== undefined) {
                     // this.registeredEvents[name]
                     this.removeListener(name, this.registeredEvents[name], this);
+                    delete this.registeredEvents[name];
                     delete namespace.events[name];
                 }
             }

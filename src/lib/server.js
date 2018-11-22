@@ -240,7 +240,7 @@ export default class Server extends EventEmitter
         this.namespaces[ns].events[name] = callFn.bind(this)
 
         // forward emitted event to subscribers
-        this.on(name, this.namespaces[ns].events[name])
+        this.on(name, callFn.bind(this))
         // this.on(name, (...params) =>
         //         {
         //             // flatten an object if no spreading is wanted

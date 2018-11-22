@@ -310,42 +310,27 @@ var Server = function (_EventEmitter) {
 
             if (namespace) {
                 if (namespace.events[name] !== undefined) {
+                    this.removeEvent(name, namespace.events[name]);
                     delete namespace.events[name];
                 }
             }
         }
 
         /**
-         * Creates a new event that can be emitted to clients.
-         * @method
-         * @param {String} name - event name
-         * @param {String} ns - namespace identifier
-         * @throws {TypeError}
-         * @return {Undefined}
-         */
+        * onEvent function return to register a callback for a event.
+        * @method
+        * @param {String} name - event name
+        * @param {String} ns - namespace identifier
+        * @throws {TypeError}
+        * @return {Function}
+        */
 
     }, {
-        key: "event",
-        value: function event(name) {
+        key: "onEvent",
+        value: function onEvent(name, ns) {
             var _this2 = this;
 
-            var ns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
-
-            (0, _assertArgs2.default)(arguments, {
-                "name": "string",
-                "[ns]": "string"
-            });
-
-            if (!this.namespaces[ns]) this._generateNamespace(ns);else {
-                var index = this.namespaces[ns].events[name];
-
-                if (index !== undefined) throw new Error("Already registered event " + ns + name);
-            }
-
-            this.namespaces[ns].events[name] = [];
-
-            // forward emitted event to subscribers
-            this.on(name, function () {
+            return function () {
                 for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
                     params[_key] = arguments[_key];
                 }
@@ -384,7 +369,57 @@ var Server = function (_EventEmitter) {
                         }
                     }
                 }
+            };
+        }
+
+        /**
+         * Creates a new event that can be emitted to clients.
+         * @method
+         * @param {String} name - event name
+         * @param {String} ns - namespace identifier
+         * @throws {TypeError}
+         * @return {Undefined}
+         */
+
+    }, {
+        key: "event",
+        value: function event(name) {
+            var ns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
+
+            (0, _assertArgs2.default)(arguments, {
+                "name": "string",
+                "[ns]": "string"
             });
+
+            if (!this.namespaces[ns]) this._generateNamespace(ns);else {
+                var index = this.namespaces[ns].events[name];
+
+                if (index !== undefined) throw new Error("Already registered event " + ns + name);
+            }
+            var callFn = this.onEvent(name, ns).bind(this);
+            this.namespaces[ns].events[name] = callFn;
+
+            // forward emitted event to subscribers
+            this.on(name, callFn);
+            // this.on(name, (...params) =>
+            //         {
+            //             // flatten an object if no spreading is wanted
+            //             if (params.length === 1 && params[0] instanceof Object)
+            //                 params = params[0]
+            //
+            //             for (const socket_id of this.namespaces[ns].events[name])
+            //             {
+            //                 const socket = this.namespaces[ns].clients.get(socket_id)
+            //
+            //                 if (!socket)
+            //                     continue
+            //
+            //                 socket.send(CircularJSON.stringify({
+            //                     notification: name,
+            //                     params: params || null
+            //                 }))
+            //             }
+            //         })
         }
 
         /**

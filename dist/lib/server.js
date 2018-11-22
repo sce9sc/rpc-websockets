@@ -210,6 +210,30 @@ var Server = function (_EventEmitter) {
         }
 
         /**
+        * UnRegisters an RPC method.
+        * @method
+        * @param {String} name - method name
+        * @param {String} ns - namespace identifier
+        * @throws {TypeError}
+        * @return {Undefined}
+        */
+
+    }, {
+        key: "unregister",
+        value: function unregister(name) {
+            var ns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
+
+            (0, _assertArgs2.default)(arguments, {
+                name: "string",
+                "[ns]": "string"
+            });
+
+            if (this.namespaces[ns]) {
+                delete this.namespace.rpc_methods[name];
+            }
+        }
+
+        /**
          * Removes a namespace and closes all connections
          * @method
          * @param {String} ns - namespace identifier
@@ -674,7 +698,7 @@ var Server = function (_EventEmitter) {
                     }, _callee, _this4, [[2, 6], [16, 31, 35, 43], [36,, 38, 42]]);
                 }));
 
-                return function (_x5) {
+                return function (_x6) {
                     return _ref.apply(this, arguments);
                 };
             }());
@@ -1049,7 +1073,7 @@ var Server = function (_EventEmitter) {
                 }, _callee2, this, [[18, 38, 42, 50], [43,, 45, 49], [60, 78, 82, 90], [83,, 85, 89], [94, 100]]);
             }));
 
-            function _runMethod(_x7, _x8) {
+            function _runMethod(_x8, _x9) {
                 return _ref2.apply(this, arguments);
             }
 

@@ -231,7 +231,10 @@ var Server = function (_EventEmitter) {
             var namespace = this.namespaces[ns];
 
             if (namespace) {
-                delete namespace.rpc_methods[name];
+                if (namespace.rpc_methods[name]) {
+                    delete namespace.rpc_methods[name];
+                    delete namespace.events[name];
+                }
             }
         }
 

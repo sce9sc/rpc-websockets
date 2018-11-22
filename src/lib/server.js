@@ -101,6 +101,27 @@ export default class Server extends EventEmitter
 
         this.namespaces[ns].rpc_methods[name] = fn
     }
+	
+	
+   /**
+    * UnRegisters an RPC method.
+    * @method
+    * @param {String} name - method name
+    * @param {String} ns - namespace identifier
+    * @throws {TypeError}
+    * @return {Undefined}
+    */
+   unregister(name, ns = "/")
+   {
+       assertArgs(arguments, {
+           name: "string",
+           "[ns]": "string"
+       })
+
+       if(this.namespaces[ns]){
+		   delete namespace.rpc_methods[name];
+	   }
+   }
 
     /**
      * Removes a namespace and closes all connections

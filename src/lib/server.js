@@ -176,7 +176,7 @@ export default class Server extends EventEmitter
         {
             if (namespace.events[name] !== undefined)
             {
-                delete namespace.rpc_methods[name]
+                delete namespace.events[name]
             }
         }
     }

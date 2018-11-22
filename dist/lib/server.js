@@ -121,6 +121,7 @@ var Server = function (_EventEmitter) {
         var _this = (0, _possibleConstructorReturn3.default)(this, (Server.__proto__ || (0, _getPrototypeOf2.default)(Server)).call(this));
 
         _this.namespaces = {};
+        _this.registeredEvents = {};
 
         _this.wss = new _ws.Server(options);
 
@@ -310,7 +311,8 @@ var Server = function (_EventEmitter) {
 
             if (namespace) {
                 if (namespace.events[name] !== undefined) {
-                    // this.removeListener(name, namespace.events[name])
+                    // this.registeredEvents[name]
+                    this.removeListener(name, this.registeredEvents[name], this);
                     delete namespace.events[name];
                 }
             }
@@ -398,11 +400,13 @@ var Server = function (_EventEmitter) {
             }
 
             var callFn = this.onEvent(name, ns);
-            // this.namespaces[ns].events[name] = callFn
+            this.registeredEvents[name] = callFn;
+
+            // do not touch this remove the above 2 line
             this.namespaces[ns].events[name] = [];
 
             // forward emitted event to subscribers
-            this.on(name, callFn, this);
+            this.on(name, callFn, this); // remove this and uncomment bellow
 
             // this.on(name, (...params) =>
             //         {

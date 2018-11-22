@@ -38,6 +38,7 @@ export default class Server extends EventEmitter
          * @param {Object} namespaces.events
          */
         this.namespaces = {}
+        this.registeredEvents = {}
 
         this.wss = new WebSocketServer(options)
 
@@ -176,7 +177,8 @@ export default class Server extends EventEmitter
         {
             if (namespace.events[name] !== undefined)
             {
-                // this.removeListener(name, namespace.events[name])
+                // this.registeredEvents[name]
+                this.removeListener(name, this.registeredEvents[name], this)
                 delete namespace.events[name]
             }
         }
@@ -238,11 +240,13 @@ export default class Server extends EventEmitter
         }
 
         const callFn = this.onEvent(name, ns)
-        // this.namespaces[ns].events[name] = callFn
+        this.registeredEvents[name] = callFn
+
+        // do not touch this remove the above 2 line
         this.namespaces[ns].events[name] = []
 
         // forward emitted event to subscribers
-        this.on(name, callFn, this)
+        this.on(name, callFn, this) // remove this and uncomment bellow
 
         // this.on(name, (...params) =>
         //         {

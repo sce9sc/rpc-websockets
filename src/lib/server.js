@@ -117,9 +117,11 @@ export default class Server extends EventEmitter
             "[ns]": "string"
         })
 
-        if (this.namespaces[ns])
+        var namespace = this.namespaces[ns]
+
+        if (namespace)
         {
-            delete this.namespace[ns].rpc_methods[name]
+            delete namespace.rpc_methods[name]
         }
     }
 

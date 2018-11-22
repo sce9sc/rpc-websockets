@@ -310,7 +310,7 @@ var Server = function (_EventEmitter) {
 
             if (namespace) {
                 if (namespace.events[name] !== undefined) {
-                    this.removeEvent(name, namespace.events[name]);
+                    this.removeListener(name, namespace.events[name]);
                     delete namespace.events[name];
                 }
             }

@@ -289,6 +289,34 @@ var Server = function (_EventEmitter) {
         }
 
         /**
+        * removeEvent.
+        * @method
+        * @param {String} name - method name
+        * @param {String} ns - namespace identifier
+        * @throws {TypeError}
+        * @return {Undefined}
+        */
+
+    }, {
+        key: "removeEvent",
+        value: function removeEvent(name) {
+            var ns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
+
+            (0, _assertArgs2.default)(arguments, {
+                name: "string",
+                "[ns]": "string"
+            });
+
+            var namespace = this.namespaces[ns];
+
+            if (namespace) {
+                if (namespace.events[name] !== undefined) {
+                    delete namespace.rpc_methods[name];
+                }
+            }
+        }
+
+        /**
          * Creates a new event that can be emitted to clients.
          * @method
          * @param {String} name - event name
@@ -703,7 +731,7 @@ var Server = function (_EventEmitter) {
                     }, _callee, _this4, [[2, 6], [16, 31, 35, 43], [36,, 38, 42]]);
                 }));
 
-                return function (_x6) {
+                return function (_x7) {
                     return _ref.apply(this, arguments);
                 };
             }());
@@ -1078,7 +1106,7 @@ var Server = function (_EventEmitter) {
                 }, _callee2, this, [[18, 38, 42, 50], [43,, 45, 49], [60, 78, 82, 90], [83,, 85, 89], [94, 100]]);
             }));
 
-            function _runMethod(_x8, _x9) {
+            function _runMethod(_x9, _x10) {
                 return _ref2.apply(this, arguments);
             }
 

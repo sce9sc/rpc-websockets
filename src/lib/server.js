@@ -157,6 +157,32 @@ export default class Server extends EventEmitter
     }
 
     /**
+    * removeEvent.
+    * @method
+    * @param {String} name - method name
+    * @param {String} ns - namespace identifier
+    * @throws {TypeError}
+    * @return {Undefined}
+    */
+    removeEvent(name, ns = "/")
+    {
+        assertArgs(arguments, {
+            name: "string",
+            "[ns]": "string"
+        })
+
+        var namespace = this.namespaces[ns]
+
+        if (namespace)
+        {
+            if (namespace.events[name] !== undefined)
+            {
+                delete namespace.rpc_methods[name]
+            }
+        }
+    }
+
+    /**
      * Creates a new event that can be emitted to clients.
      * @method
      * @param {String} name - event name

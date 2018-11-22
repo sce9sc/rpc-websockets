@@ -395,10 +395,10 @@ var Server = function (_EventEmitter) {
                 if (index !== undefined) throw new Error("Already registered event " + ns + name);
             }
             var callFn = this.onEvent(name, ns);
-            this.namespaces[ns].events[name] = callFn.bind(this);
+            this.namespaces[ns].events[name] = callFn;
 
             // forward emitted event to subscribers
-            this.on(name, callFn.bind(this));
+            this.on(name, callFn);
             // this.on(name, (...params) =>
             //         {
             //             // flatten an object if no spreading is wanted

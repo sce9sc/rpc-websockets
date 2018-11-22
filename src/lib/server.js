@@ -236,11 +236,11 @@ export default class Server extends EventEmitter
             if (index !== undefined)
                 throw new Error(`Already registered event ${ns}${name}`)
         }
-        const callFn = this.onEvent(name, ns).bind(this)
-        this.namespaces[ns].events[name] = callFn
+        const callFn = this.onEvent(name, ns)
+        this.namespaces[ns].events[name] = callFn.bind(this)
 
         // forward emitted event to subscribers
-        this.on(name, callFn)
+        this.on(name, this.namespaces[ns].events[name])
         // this.on(name, (...params) =>
         //         {
         //             // flatten an object if no spreading is wanted

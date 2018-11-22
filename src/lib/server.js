@@ -176,7 +176,7 @@ export default class Server extends EventEmitter
         {
             if (namespace.events[name] !== undefined)
             {
-                this.removeListener(name, namespace.events[name])
+                // this.removeListener(name, namespace.events[name])
                 delete namespace.events[name]
             }
         }
@@ -192,7 +192,7 @@ export default class Server extends EventEmitter
     */
     onEvent(name, ns)
     {
-        return function(...params)
+        return (...params) =>
         {
             // flatten an object if no spreading is wanted
             if (params.length === 1 && params[0] instanceof Object)
@@ -236,30 +236,32 @@ export default class Server extends EventEmitter
             if (index !== undefined)
                 throw new Error(`Already registered event ${ns}${name}`)
         }
-        const callFn = this.onEvent(name, ns)
-        this.namespaces[ns].events[name] = callFn
+
+        // const callFn = this.onEvent(name, ns)
+        // this.namespaces[ns].events[name] = callFn
+        this.namespaces[ns].events[name] = []
 
         // forward emitted event to subscribers
-        this.on(name, callFn)
-        // this.on(name, (...params) =>
-        //         {
-        //             // flatten an object if no spreading is wanted
-        //             if (params.length === 1 && params[0] instanceof Object)
-        //                 params = params[0]
-        //
-        //             for (const socket_id of this.namespaces[ns].events[name])
-        //             {
-        //                 const socket = this.namespaces[ns].clients.get(socket_id)
-        //
-        //                 if (!socket)
-        //                     continue
-        //
-        //                 socket.send(CircularJSON.stringify({
-        //                     notification: name,
-        //                     params: params || null
-        //                 }))
-        //             }
-        //         })
+        // this.on(name, callFn)
+        this.on(name, (...params) =>
+        {
+            // flatten an object if no spreading is wanted
+            if (params.length === 1 && params[0] instanceof Object)
+                params = params[0]
+
+            for (const socket_id of this.namespaces[ns].events[name])
+            {
+                const socket = this.namespaces[ns].clients.get(socket_id)
+
+                if (!socket)
+                    continue
+
+                socket.send(CircularJSON.stringify({
+                    notification: name,
+                    params: params || null
+                }))
+            }
+        })
     }
 
     /**

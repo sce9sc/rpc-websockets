@@ -328,8 +328,6 @@ var Server = function (_EventEmitter) {
     }, {
         key: "onEvent",
         value: function onEvent(name, ns) {
-            var _this2 = this;
-
             return function () {
                 for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
                     params[_key] = arguments[_key];
@@ -343,10 +341,10 @@ var Server = function (_EventEmitter) {
                 var _iteratorError3 = undefined;
 
                 try {
-                    for (var _iterator3 = (0, _getIterator3.default)(_this2.namespaces[ns].events[name]), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    for (var _iterator3 = (0, _getIterator3.default)(this.namespaces[ns].events[name]), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                         var socket_id = _step3.value;
 
-                        var socket = _this2.namespaces[ns].clients.get(socket_id);
+                        var socket = this.namespaces[ns].clients.get(socket_id);
 
                         if (!socket) continue;
 
@@ -584,11 +582,11 @@ var Server = function (_EventEmitter) {
     }, {
         key: "close",
         value: function close() {
-            var _this3 = this;
+            var _this2 = this;
 
             return new _promise2.default(function (resolve, reject) {
                 try {
-                    _this3.wss.close();
+                    _this2.wss.close();
                     resolve();
                 } catch (error) {
                     reject(error);
@@ -607,7 +605,7 @@ var Server = function (_EventEmitter) {
     }, {
         key: "_handleRPC",
         value: function _handleRPC(socket) {
-            var _this4 = this;
+            var _this3 = this;
 
             var ns = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
 
@@ -674,7 +672,7 @@ var Server = function (_EventEmitter) {
 
                                     message = _step4.value;
                                     _context.next = 22;
-                                    return _this4._runMethod(message, socket._id, ns);
+                                    return _this3._runMethod(message, socket._id, ns);
 
                                 case 22:
                                     _response = _context.sent;
@@ -742,7 +740,7 @@ var Server = function (_EventEmitter) {
 
                                 case 46:
                                     _context.next = 48;
-                                    return _this4._runMethod(data, socket._id, ns);
+                                    return _this3._runMethod(data, socket._id, ns);
 
                                 case 48:
                                     response = _context.sent;
@@ -762,7 +760,7 @@ var Server = function (_EventEmitter) {
                                     return _context.stop();
                             }
                         }
-                    }, _callee, _this4, [[2, 6], [16, 31, 35, 43], [36,, 38, 42]]);
+                    }, _callee, _this3, [[2, 6], [16, 31, 35, 43], [36,, 38, 42]]);
                 }));
 
                 return function (_x7) {
@@ -1158,12 +1156,12 @@ var Server = function (_EventEmitter) {
     }, {
         key: "_generateNamespace",
         value: function _generateNamespace(name) {
-            var _this5 = this;
+            var _this4 = this;
 
             this.namespaces[name] = {
                 rpc_methods: {
                     "__listMethods": function __listMethods() {
-                        return (0, _keys2.default)(_this5.namespaces[name].rpc_methods);
+                        return (0, _keys2.default)(_this4.namespaces[name].rpc_methods);
                     }
                 },
                 clients: new _map2.default(),

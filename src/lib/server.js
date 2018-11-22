@@ -192,7 +192,7 @@ export default class Server extends EventEmitter
     */
     onEvent(name, ns)
     {
-        return (...params) =>
+        return function(...params)
         {
             // flatten an object if no spreading is wanted
             if (params.length === 1 && params[0] instanceof Object)

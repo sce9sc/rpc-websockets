@@ -177,42 +177,8 @@ export default class Server extends EventEmitter
         {
             if (namespace.events[name] !== undefined)
             {
-                // this.registeredEvents[name]
-                // this.removeListener(name, this.registeredEvents[name], this)
-                // delete this.registeredEvents[name]
                 this.removeListener(name)
                 delete namespace.events[name]
-            }
-        }
-    }
-
-    /**
-    * onEvent function return to register a callback for a event.
-    * @method
-    * @param {String} name - event name
-    * @param {String} ns - namespace identifier
-    * @throws {TypeError}
-    * @return {Function}
-    */
-    onEvent(name, ns)
-    {
-        return (...params) =>
-        {
-            // flatten an object if no spreading is wanted
-            if (params.length === 1 && params[0] instanceof Object)
-                params = params[0]
-
-            for (const socket_id of this.namespaces[ns].events[name])
-            {
-                const socket = this.namespaces[ns].clients.get(socket_id)
-
-                if (!socket)
-                    continue
-
-                socket.send(CircularJSON.stringify({
-                    notification: name,
-                    params: params || null
-                }))
             }
         }
     }
@@ -241,15 +207,9 @@ export default class Server extends EventEmitter
                 throw new Error(`Already registered event ${ns}${name}`)
         }
 
-        // const callFn = this.onEvent(name, ns)
-        // this.registeredEvents[name] = callFn
-
-        // do not touch this remove the above 2 line
         this.namespaces[ns].events[name] = []
 
         // forward emitted event to subscribers
-        // this.on(name, callFn, this) // remove this and uncomment bellow
-
         this.on(name, (...params) =>
         {
             // flatten an object if no spreading is wanted
